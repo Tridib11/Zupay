@@ -5,5 +5,7 @@ const app=express()
 
 app.use(cors())
 
+app.use(express.json())
+
 
 app.user("/api/v1",mainRouter)
