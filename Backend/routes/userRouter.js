@@ -59,7 +59,7 @@ router.post("/signup", async (req, res) => {
 
 const siginBody=zod.object({
   username:zod.string(),
-  password:zod.password().min(6)
+  password:zod.string().min(6)
 })
 
 
