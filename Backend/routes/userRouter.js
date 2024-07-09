@@ -4,6 +4,10 @@ const { User } = require("../db");
 const { JWT_SECRET } = require("../config");
 const router = express.Router();
 
+
+//User signup
+
+
 const signupBody = zod.object({
   username: zod.string().email(),
   firstName: zod.string(),
@@ -48,5 +52,45 @@ router.post("/signup", async (req, res) => {
     token: token,
   });
 });
+
+
+//User signin
+
+
+const siginBody=zod.object({
+  username:zod.string(),
+  password:zod.password().min(6)
+})
+
+
+router.post("/signin",(req,res)=>{
+  const {success}=siginBody.safeParse(req.body)
+  if(!success){
+      return res.json({
+        message:"User doesnot exists / Wrong credentials"
+      })
+  }
+
+  const user=User.findOne({
+    username:req.body.username,
+    password:req.body.password
+  })
+
+  if(user){
+    const token=jwt.sign({
+      userId:user._id
+    },JWT_SECRET)
+
+     return res.json({
+      token:token
+    })
+  }
+
+
+  res.status(411).json({
+    message:"Error while logging you in"
+  })
+  
+})
 
 module.exports = router;
