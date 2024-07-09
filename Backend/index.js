@@ -8,4 +8,8 @@ app.use(cors())
 app.use(express.json())
 
 
-app.user("/api/v1",mainRouter)
+app.use("/api/v1",mainRouter)
+
+app.listen(3000,()=>{
+  console.log("Server started")
+})

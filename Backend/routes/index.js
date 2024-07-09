@@ -4,7 +4,7 @@ const userRouter=require("./userRouter")
 const router=express.Router()
 
 
-router.use("/api/v1/user",userRouter)
+router.use("/user",userRouter)
 
 
 module.exports=router
