@@ -44,7 +44,7 @@ router.post("/signup", async (req, res) => {
     {
       userId,
     },
-    JWT_SECRET
+    JWT_SECRET,{ expiresIn: '3h' }
   );
 
   return res.json({
