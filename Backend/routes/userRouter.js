@@ -99,7 +99,7 @@ const updateBody = zod.object({
   lastName: zod.string().optional(),
 });
 
-router.put("/changeDetails", authMiddleware, async (res, res) => {
+router.put("/changeDetails", authMiddleware, async (req, res) => {
   const { success } = updateBody.safeParse(req.body);
   if (!success) {
     return res.status(411).json({
