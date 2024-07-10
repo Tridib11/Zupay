@@ -8,12 +8,12 @@ const router = express.Router();
 
 //Checking balance
 router.get("/balance",authMiddleware,async(req,res)=>{
-  const account=await Account.findOne({
-      userId:req.userId
-  })
-  res.json({
-      balance:account.balance
-  })
+    const account=await Account.findOne({
+        userId:req.userId
+    })
+    res.json({
+        balance:account.balance
+    })
 })
 
 
@@ -45,8 +45,8 @@ router.post("/transfer", authMiddleware, async (req, res) => {
 
   //Performing the transfer
 
-  await Account.updateOne({ userId: req.userId },{ $inc: { $balance: -amount } });
-  await Account.updateOne({ userId: to }, { $inc: { $balance: amount } });
+  await Account.updateOne({ userId: req.userId },{ $inc: { $balance: -amount } }).session();
+  await Account.updateOne({ userId: to }, { $inc: { $balance: amount } }).session();
 
   //Commiting transactions
 
