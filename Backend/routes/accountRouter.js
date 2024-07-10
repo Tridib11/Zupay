@@ -6,14 +6,16 @@ const router = express.Router();
 
 //Checking balance
 
-router.get("/balance", authMiddleware, async (req, res) => {
-  const account = await Account.findOne({
-    userId: req.userId,
-  });
+//Checking balance
+router.get("/balance",authMiddleware,async(req,res)=>{
+  const account=await Account.findOne({
+      userId:req.userId
+  })
   res.json({
-    balance: account.balance,
-  });
-});
+      balance:account.balance
+  })
+})
+
 
 router.post("/transfer", authMiddleware, async (req, res) => {
   const session = await mongoose.startSession();
@@ -47,7 +49,7 @@ router.post("/transfer", authMiddleware, async (req, res) => {
   await Account.updateOne({ userId: to }, { $inc: { $balance: amount } });
 
   //Commiting transactions
-  
+
   await session.commitTransaction();
 
   return res.status(200).json({

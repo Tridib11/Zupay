@@ -4,7 +4,7 @@ const { User, Account } = require("../db");
 const { JWT_SECRET } = require("../config");
 const authMiddleware = require("../middleware");
 const router = express.Router();
-
+const jwt=require("jsonwebtoken")
 //User signup
 
 const signupBody = zod.object({
@@ -14,23 +14,25 @@ const signupBody = zod.object({
   password: zod.string().min(6),
 });
 
+//User signup
 router.post("/signup", async (req, res) => {
   const { success } = signupBody.safeParse(req.body);
   if (!success) {
-    return res.status(411).json({
-      message: "Email already taken / Invalid inputs",
+    return res.status(400).json({
+      message: "Invalid inputs",
     });
   }
+
   const existingUser = await User.findOne({
     username: req.body.username,
   });
   if (existingUser) {
-    return res.status(411).json({
-      message: "Email already Taken / User already exists",
+    return res.status(400).json({
+      message: "Email already taken",
     });
   }
 
-  const user = User.create({
+  const user = await User.create({
     username: req.body.username,
     password: req.body.password,
     firstName: req.body.firstName,
@@ -58,43 +60,43 @@ router.post("/signup", async (req, res) => {
   });
 });
 
+
 //User signin
 
-const siginBody = zod.object({
+const signinBody = zod.object({
   username: zod.string(),
   password: zod.string().min(6),
 });
 
-router.post("/signin", (req, res) => {
-  const { success } = siginBody.safeParse(req.body);
+router.post("/signin", async (req, res) => {
+  const { success } = signinBody.safeParse(req.body)
   if (!success) {
-    return res.json({
-      message: "User doesnot exists / Wrong credentials",
-    });
+      return res.status(411).json({
+          message: "Incorrect inputs"
+      })
   }
 
-  const user = User.findOne({
-    username: req.body.username,
-    password: req.body.password,
+  const user = await User.findOne({
+      username: req.body.username,
+      password: req.body.password
   });
 
   if (user) {
-    const token = jwt.sign(
-      {
-        userId: user._id,
-      },
-      JWT_SECRET
-    );
+      const token = jwt.sign({
+          userId: user._id
+      }, JWT_SECRET);
 
-    return res.json({
-      token: token,
-    });
+      return res.json({
+          token: token
+      })
+      
   }
 
+  
   res.status(411).json({
-    message: "Error while logging you in",
-  });
-});
+      message: "Error while logging in"
+  })
+})
 
 //forgot password
 
