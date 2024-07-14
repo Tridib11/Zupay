@@ -2,6 +2,8 @@ import Heading from "../components/Heading.jsx";
 import SubHeading from "../components/SubHeading.jsx";
 import {InputBox} from "../components/InputBox.jsx";
 import {Button} from "../components/Button.jsx";
+import {BottomWarning }from "../components/BottomWarning.jsx";
+
 
 function Signup(){
   return <div className="bg-slate-300 h-screen flex justify-center">
@@ -16,6 +18,7 @@ function Signup(){
         <div className="pt-4">
           <Button label="Sign up"/>
         </div>
+        <BottomWarning label={"Already have an account?"} buttonText={"Sign in"} to={"/signin"}/>
       </div>
     </div>
   </div>
